@@ -1,0 +1,59 @@
+##
+##  Minefields
+##
+
+# Enable mine sweeping using beams
+BeamSweepMines = Yes
+
+# Sweep range/rate for regular and web mines
+BeamSweepRange = 5
+BeamSweepRate = 4
+BeamWebSweepRate = 3
+
+# Enable mine sweeping using fighters
+FighterSweepMines = Yes
+
+# If set, only Colonies can use fighters
+ColonialFighterOnlySweepMines = No
+
+# Sweep rate/range
+FtrSweepRate = 20
+FtrWebSweepRate = 0
+
+# Enable laying of regular/web mines
+LayMinefields = Yes
+LayWebMinefields = Yes
+
+# Enable scooping of own mines
+ScoopMinefields = Yes
+
+
+##
+##  Wire Transfer
+##
+
+# Feature enabled?
+StarbaseMCTransfer = Yes
+
+# Maximum transfer amount per base
+MaxMCTransfer = 3000
+
+
+##
+##  Part Transport
+##
+
+# Feature enabled?
+TransportComp = Yes
+
+# If yes, only unarmed ships can carry parts.
+FreighterCarryOnly = Yes
+
+# If yes, only ships that cannot cloak can carry parts.
+NonCloakerCarryOnly = Yes
+
+# Cargo room consumption per ship.
+CargoSpacePerComp = 40
+
+# Mark part transports using "ST:" prefix to ship name.
+TagSpecialTransport = Yes
