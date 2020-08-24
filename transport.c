@@ -425,7 +425,7 @@ struct ReportShip_State {
     struct Message m;
 };
 
-static void ReportShip_Add(struct ReportShip_State* st, Uns16 amount, const char* name)
+static void ReportShip_Add(struct ReportShip_State* st, Uns16 amount, const char* name, const char* fcPrefix, int fcDigit)
 {
     if (amount != 0) {
         if (st->m.Lines >= MAX_MESSAGE_LINES) {
@@ -440,7 +440,7 @@ static void ReportShip_Add(struct ReportShip_State* st, Uns16 amount, const char
         }
 
         char line[50];
-        snprintf(line, sizeof(line), "%3d x %s\n", amount, name);
+        snprintf(line, sizeof(line), "%3d x %-20s [%s%d]\n", amount, name, fcPrefix, fcDigit % 10);
         Message_Add(&st->m, line);
     }
 }
@@ -464,13 +464,13 @@ static void ReportShip(struct TransportShip* sh, const struct Config* c, Uns16 s
                    st.args, 2);
 
     for (Uns16 i = 1; i <= ENGINE_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, ENGINE_TECH, i), EngineName(i, name));
+        ReportShip_Add(&st, TransportShip_Cargo(sh, ENGINE_TECH, i), EngineName(i, name), "UE", i);
     }
     for (Uns16 i = 1; i <= BEAM_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, BEAM_TECH, i), BeamName(i, name));
+        ReportShip_Add(&st, TransportShip_Cargo(sh, BEAM_TECH, i), BeamName(i, name), "UB", i);
     }
     for (Uns16 i = 1; i <= TORP_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, TORP_TECH, i), TorpName(i, name));
+        ReportShip_Add(&st, TransportShip_Cargo(sh, TORP_TECH, i), TorpName(i, name), "UT", i);
     }
 
     Message_Send(&st.m, ShipOwner(shipId));
