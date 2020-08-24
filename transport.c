@@ -639,6 +639,64 @@ static void TrimCargo(struct TransportState* st, const struct Config* c)
     }
 }
 
+static void HandleNewShips(struct TransportState* st)
+{
+    /*
+     *  A ship may be destroyed and rebuilt the same turn.
+     *  If it was carrying components, we must reset its cargo.
+     *  Unfortunately, there is no easy way to detect that.
+     *
+     *  The approach I'm taking here is to scan UTIL.TMP fo "ship built" records,
+     *  and reset all ships seen.
+     *
+     *  An alternative approach would be to hook into a pcontrol
+     *  stage shortly after combat, which requires extra setup for hosts.
+     */
+
+    // Open file
+    FILE* fp = OpenInputFile("util.tmp", GAME_DIR_ONLY | NO_MISSING_ERROR);
+    if (fp == NULL) {
+        Warning("Unable to open util.tmp; newly-built ships will not be cleaned.");
+        return;
+    }
+
+    // File format definitions
+    enum { PlayerSlot, TypeSlot, SizeSlot, HEADER_SIZE };
+    Uns16 header[HEADER_SIZE];
+
+    const Uns16 Type_ShipBuilt = 20;
+
+    enum { ShipSlot, BaseSlot, BODY_SIZE };
+    Uns16 body[BODY_SIZE];
+
+    // Read file
+    while (DOSRead16(header, HEADER_SIZE, fp)) {
+        if (header[TypeSlot] == Type_ShipBuilt && header[SizeSlot] >= sizeof(body)) {
+            // Found an applicable record; read it
+            if (!DOSRead16(body, BODY_SIZE, fp)) {
+                Warning("Unable to read util.tmp; aborting mid-way.");
+                break;
+            }
+
+            // Reset the mentioned ship
+            const Uns16 shipId = body[ShipSlot];
+            struct TransportShip* sh = TransportState_Ship(st, shipId);
+            if (TransportShip_HasComponents(sh)) {
+                Info("\t(!) Ship %d: was rebuilt, reset cargo", shipId);
+                TransportShip_Clear(sh);
+            }
+
+            // Skip fewer bytes
+            header[SizeSlot] -= sizeof(body);
+        }
+
+        // Skip record content
+        fseek(fp, header[SizeSlot], SEEK_CUR);
+    }
+    fclose(fp);
+}
+
+
 /*
  *  Public Entry Points
  */
@@ -666,6 +724,9 @@ void DoComponentTransport(const struct Config* c)
     if (c->TagSpecialTransport) {
         UntagShips();
     }
+
+    // Scan for newly-built ships and remove their components
+    HandleNewShips(&st);
 
     // Trim overloaded ships
     TrimCargo(&st, c);
