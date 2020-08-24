@@ -350,6 +350,7 @@ Host Order
 
 ### AUXHOST2 (after movement)
 
-+ Component loading and unloading in order of ship Id
++ Component unloading in order of ship Id
++ Component loading in order of ship Id
 + Credit transfers
 + Config transmission

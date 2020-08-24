@@ -731,7 +731,7 @@ void DoComponentTransport(const struct Config* c)
     // Trim overloaded ships
     TrimCargo(&st, c);
 
-    // Perform component transports
+    // Unload all ships
     for (Uns16 shipId = 1; shipId <= SHIP_NR; ++shipId) {
         int slot;
         Uns16 planetId;
@@ -752,7 +752,22 @@ void DoComponentTransport(const struct Config* c)
                 UnloadComponent(sh, shipId, planetId, BEAM_TECH, slot);
             } else if ((slot = ShipMatchFCode(shipId, "UT", TORP_NR)) != 0) {
                 UnloadComponent(sh, shipId, planetId, TORP_TECH, slot);
-            } else if (c->TransportComp && ShipOwner(shipId) == PlanetOwner(planetId)) {
+            }
+        }
+    }
+
+    // Load all ships
+    if (c->TransportComp) {
+        for (Uns16 shipId = 1; shipId <= SHIP_NR; ++shipId) {
+            int slot;
+            Uns16 planetId;
+            struct TransportShip* sh;
+            if (IsShipExist(shipId)
+                && (sh = TransportState_Ship(&st, shipId))
+                && (planetId = FindPlanetAtShip(shipId)) != 0
+                && IsBaseExist(planetId)
+                && ShipOwner(shipId) == PlanetOwner(planetId))
+            {
                 // Loading only works at own bases, and only when configured.
                 if ((slot = ShipMatchFCode(shipId, "GE", ENGINE_NR)) != 0) {
                     GetComponent(sh, c, shipId, planetId, ENGINE_TECH, slot);
