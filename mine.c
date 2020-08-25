@@ -8,6 +8,7 @@
 #include "config.h"
 #include "message.h"
 #include "util.h"
+#include "utildata.h"
 
 /* With this option set, we try to reproduce psbplus behaviour more closely:
    torpedo-to-mine uses tech-squared, not slot-squared.
@@ -123,6 +124,7 @@ static void LayMinefield(const struct Config* c, Uns16 planetId, RaceType_Def ow
     if (unitsLaid > 0 && mineId > 0) {
         Info("\t(+) Base %d, player %d, minefield %d: laid %d units", planetId, owner, mineId, (int) unitsLaid);
         Message_MinefieldLaid(owner, planetId, mineId, MinefieldPositionX(mineId), MinefieldPositionY(mineId), unitsLaid, MinefieldUnits(mineId), MinefieldRadius(mineId), isWeb);
+        Util_Minefield(owner, mineId, MinefieldPositionX(mineId), MinefieldPositionY(mineId), MinefieldOwner(mineId), MinefieldUnits(mineId), IsMinefieldWeb(mineId), MINE_LAID);
     }
 }
 
@@ -205,8 +207,10 @@ static void SweepFromPlanet(Uns16 planetId, Uns32 mineCapacity, Uns32 webCapacit
             const Uns32 remainingUnits = existingUnits - sweptUnits;
 
             PutMinefieldUnits(mineId, remainingUnits);
-            Message_MinefieldSwept(PlanetOwner(planetId), planetId, mineId, oldX, oldY, oldOwner, oldRadius, sweptUnits, remainingUnits, oldWeb, withFighters);
+
             Info("\t(+) Base %d, minefield %d: sweep %d units using %s", planetId, mineId, sweptUnits, withFighters ? "fighters" : "beams");
+            Message_MinefieldSwept(PlanetOwner(planetId), planetId, mineId, oldX, oldY, oldOwner, oldRadius, sweptUnits, remainingUnits, oldWeb, withFighters);
+            Util_Minefield(PlanetOwner(planetId), mineId, oldX, oldY, oldOwner, remainingUnits, oldWeb, MINE_SWEPT);
         }
     }
 }
@@ -292,11 +296,12 @@ static void ScoopFromPlanet(const struct Config* c, Uns16 planetId)
             }
             PutMinefieldUnits(mineId, remainingUnits);
             PutBaseTorps(planetId, torpNr, newTorps);
-            Message_MinefieldScooped(PlanetOwner(planetId), planetId, mineId, MinefieldPositionX(mineId), MinefieldPositionY(mineId), oldRadius, newTorps - existingTorps, IsMinefieldWeb(mineId));
+
             Info("\t(+) Base %d, minefield %d: scooping miness", planetId, mineId);
+            Message_MinefieldScooped(PlanetOwner(planetId), planetId, mineId, MinefieldPositionX(mineId), MinefieldPositionY(mineId), oldRadius, newTorps - existingTorps, IsMinefieldWeb(mineId));
+            Util_Minefield(PlanetOwner(planetId), mineId, MinefieldPositionX(mineId), MinefieldPositionY(mineId), MinefieldOwner(mineId), remainingUnits, IsMinefieldWeb(mineId), MINE_SWEPT);
         }
     }
-
 }
 
 void DoMineSweeping(const struct Config* c)

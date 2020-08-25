@@ -90,6 +90,10 @@ static void InitHostAction(Boolean beforeMovement, struct Config* c)
         ErrorExit("Unable to read host data");
     }
     Config_Load(c);
+
+    // Set util.tmp more. This causes our util.dat records come out in the right order.
+    // In particular, our mine scans come out before PHost's.
+    SetUtilMode(UTIL_Tmp);
 }
 
 static void DoneHostAction()

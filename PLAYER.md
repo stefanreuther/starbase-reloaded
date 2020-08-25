@@ -354,3 +354,51 @@ Host Order
 + Component loading in order of ship Id
 + Credit transfers
 + Config transmission
+
+
+
+Utility Data Files
+------------------
+
+Starbase Reloaded will generate `utilX.dat` records.
+
+
+### Minefield information (type 46)
+
+This record is the same as used by PHost for regular minefield
+reports.
+
+    WORD    Minefield Id
+    WORD    X
+    WORD    Y
+    WORD    Owner
+    DWORD   Mine units
+    WORD    Type (1=Web, 0=normal)
+    WORD    (reserved for controlling planet Id; sent as zero)
+    WORD    Report type (0=laid, 1=swept, 2=scanned)
+
+Caveat: like the messages, these records report status after the
+lay/sweep action. Mine decay will happen afterwards and cause the
+field to shrink. You should have some ships at "Mine Sweep" to get
+precise reports from PHost.
+
+
+### Transport summary (type 16512)
+
+This custom record is sent by Starbase Reloaded for each special
+transport.
+
+    WORD    Ship Id
+    WORD    Total mass of all loaded parts (=cargo space to reserve)
+
+
+### Transport component (type 16513)
+
+This custom record is sent by Starbase Reloaded for each type of
+starship parts loaded onto a special transport.
+
+    WORD    Ship Id
+    WORD    Type (1=engine, 2=beam, 3=torpedo launcher)
+    WORD    Slot (engine/beam/torpedo type)
+    WORD    Number of components of this type
+    WORD    Mass of each of these components

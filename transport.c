@@ -9,6 +9,7 @@
 #include "config.h"
 #include "util.h"
 #include "message.h"
+#include "utildata.h"
 
 /*
  *  Definitions
@@ -423,14 +424,17 @@ static void TagShips(struct TransportState* st)
 struct ReportShip_State {
     Uns32 args[2];
     struct Message m;
+    const struct Config* config;
 };
 
-static void ReportShip_Add(struct ReportShip_State* st, Uns16 amount, const char* name, const char* fcPrefix, int fcDigit)
+static void ReportShip_Add(struct ReportShip_State* st, const struct TransportShip* sh, BaseTech_Def type, Uns16 slot, const char* name, const char* fcPrefix)
 {
+    const Uns16 amount = TransportShip_Cargo(sh, type, slot);
     if (amount != 0) {
+        const Uns16 shipId = st->args[0];
         if (st->m.Lines >= MAX_MESSAGE_LINES) {
             Message_Add(&st->m, "(continued on next page)\n");
-            Message_Send(&st->m, ShipOwner(st->args[0]));
+            Message_Send(&st->m, ShipOwner(shipId));
             Message_Init(&st->m);
             Message_Format(&st->m,
                            "(-f%0I)<<< Special Transport >>>\n"
@@ -440,8 +444,9 @@ static void ReportShip_Add(struct ReportShip_State* st, Uns16 amount, const char
         }
 
         char line[50];
-        snprintf(line, sizeof(line), "%3d x %-20s [%s%d]\n", amount, name, fcPrefix, fcDigit % 10);
+        snprintf(line, sizeof(line), "%3d x %-20s [%s%d]\n", amount, name, fcPrefix, slot % 10);
         Message_Add(&st->m, line);
+        Util_Transport_Component(ShipOwner(shipId), shipId, type, slot, amount, ComponentMass(st->config, type, slot));
     }
 }
 
@@ -449,9 +454,11 @@ static void ReportShip(struct TransportShip* sh, const struct Config* c, Uns16 s
 {
     char name[40];
 
+    const Uns16 totalCargo = TransportShip_CargoMass(sh, c);
     struct ReportShip_State st;
     st.args[0] = shipId;
-    st.args[1] = TransportShip_CargoMass(sh, c);
+    st.args[1] = totalCargo;
+    st.config = c;
     Message_Init(&st.m);
     Message_Format(&st.m,
                    "(-f%0I)<<< Special Transport >>>\n"
@@ -462,15 +469,16 @@ static void ReportShip(struct TransportShip* sh, const struct Config* c, Uns16 s
                    "We are currently carrying components\n"
                    "with a total weight of %1d kt:\n",
                    st.args, 2);
+    Util_Transport_Summary(ShipOwner(shipId), shipId, totalCargo);
 
     for (Uns16 i = 1; i <= ENGINE_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, ENGINE_TECH, i), EngineName(i, name), "UE", i);
+        ReportShip_Add(&st, sh, ENGINE_TECH, i, EngineName(i, name), "UE");
     }
     for (Uns16 i = 1; i <= BEAM_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, BEAM_TECH, i), BeamName(i, name), "UB", i);
+        ReportShip_Add(&st, sh, BEAM_TECH, i, BeamName(i, name), "UB");
     }
     for (Uns16 i = 1; i <= TORP_NR; ++i) {
-        ReportShip_Add(&st, TransportShip_Cargo(sh, TORP_TECH, i), TorpName(i, name), "UT", i);
+        ReportShip_Add(&st, sh, TORP_TECH, i, TorpName(i, name), "UT");
     }
 
     Message_Send(&st.m, ShipOwner(shipId));

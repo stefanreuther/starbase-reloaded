@@ -37,6 +37,8 @@ my @SOURCE = qw(
    sendconf.h
    util.c
    util.h
+   utildata.c
+   utildata.h
 );
 compile_static_library('sbr', [to_prefix_list($V{IN}, @SOURCE)]);
 
