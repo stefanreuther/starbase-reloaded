@@ -213,6 +213,8 @@ void Message_MinefieldSwept(RaceType_Def owner, Uns16 planetId, Uns16 mineId, Un
         situation =
             "(-p%0I)<<< Starbase Message >>>\n"
             "\n"
+            "From: %0P\n"
+            "  Starbase %0d\n\n"
             "Detected enemy mine field #%1d\n"
             "at ( %2d, %3d )\n"
             "They are %4A WEB mines!\n"
@@ -221,6 +223,8 @@ void Message_MinefieldSwept(RaceType_Def owner, Uns16 planetId, Uns16 mineId, Un
         situation =
             "(-p%0I)<<< Starbase Message >>>\n"
             "\n"
+            "From: %0P\n"
+            "  Starbase %0d\n\n"
             "Detected enemy mine field #%1d\n"
             "at ( %2d, %3d )\n"
             "They are %4A mines!\n"
@@ -259,6 +263,8 @@ void Message_MinefieldScooped(RaceType_Def owner, Uns16 planetId, Uns16 mineId, 
         situation =
             "(-p%0I)<<< Starbase Message >>>\n"
             "\n"
+            "From: %0P\n"
+            "  Starbase %0d\n\n"
             "Detected our WEB mine field #%1d\n"
             "at ( %2d, %3d )\n"
             "Minefield is %4d ly across.\n";
@@ -266,6 +272,8 @@ void Message_MinefieldScooped(RaceType_Def owner, Uns16 planetId, Uns16 mineId, 
         situation =
             "(-p%0I)<<< Starbase Message >>>\n"
             "\n"
+            "From: %0P\n"
+            "  Starbase %0d\n\n"
             "Detected our mine field #%1d\n"
             "at ( %2d, %3d )\n"
             "Minefield is %4d ly across.\n";
