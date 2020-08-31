@@ -50,6 +50,14 @@ int ShipMatchFCode(Uns16 shipId, const char* prefix, int limit);
     @return True if array contains any nonzero value */
 Boolean AnyNonzero(const Uns16* array, size_t count);
 
+/** Get effective TrueHull value.
+    If MapTruehullByPlayerRace is set, we need to map race indexes through EffRace.
+    (Unfortunately, PDK doesn't do that for us.)
+    @param [in] player Player
+    @param [in] index Index
+    @return Hull number */
+Uns16 EffTrueHull(RaceType_Def player, Uns16 index);
+
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 

@@ -250,7 +250,13 @@ loaded starship parts will have priority.
   as many engines of the specified type as possible (as many as the
   starbase has, as many as will fit into the ship).
 
-  There is no way to load only a part of the starbase's stock.
+  There is no direct way to load only a part of the starbase's stock,
+  but you can indirectly control the number of components loaded onto
+  the ship by loading other cargo onto the ship.
+
+  If the starbase is trying to build a ship, parts required for the
+  ship build order will not be loaded onto the ship (doing so would
+  invalidate the build order).
 
   The ship needs to end its turn at a starbase owned by the same
   player to load parts from it; it is not possible to load from allied

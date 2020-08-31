@@ -56,3 +56,10 @@ Boolean AnyNonzero(const Uns16* array, size_t count)
     }
     return False;
 }
+
+Uns16 EffTrueHull(RaceType_Def player, Uns16 index)
+{
+    return gPconfigInfo->MapTruehullByPlayerRace
+        ? TrueHull(EffRace(player), index)
+        : TrueHull(player, index);
+}

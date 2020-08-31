@@ -76,6 +76,35 @@ static void PutBaseComponents(Uns16 planetId, BaseTech_Def type, Uns16 slot, Uns
     }
 }
 
+static Uns16 BaseReservedComponents(Uns16 planetId, BaseTech_Def type, Uns16 slot)
+{
+    Uns16 result = 0;
+    BuildOrder_Struct order;
+    if (BaseBuildOrder(planetId, &order)) {
+        switch (type) {
+         case ENGINE_TECH:
+            // FIXME: MapTruehullByPlayerRace?
+            if (slot == order.mEngineType) {
+                result = HullEngineNumber(EffTrueHull(BaseOwner(planetId), order.mHull));
+            }
+            break;
+         case BEAM_TECH:
+            if (slot == order.mBeamType) {
+                result = order.mNumBeams;
+            }
+            break;
+         case TORP_TECH:
+            if (slot == order.mTubeType) {
+                result = order.mNumTubes;
+            }
+            break;
+         default:;
+        }
+    }
+    // Info("##  BaseComponents(%d,%d,%d) => %d", planetId, type, slot, result);
+    return result;
+}
+
 static const char* ComponentTypeName(BaseTech_Def type)
 {
     switch (type) {
@@ -296,7 +325,8 @@ static void GetComponent(struct TransportShip* sh, const struct Config* c, Uns16
 
     // Base must have components
     const Uns16 baseComponents = BaseComponents(planetId, type, slot);
-    if (baseComponents == 0) {
+    const Uns16 reservedComponents = BaseReservedComponents(planetId, type, slot);
+    if (baseComponents <= reservedComponents) {
         Info("\t(-) Ship %d, base %d: load: no matching component on base", shipId, planetId);
         Message_Transport_LoadNoParts(ShipOwner(shipId), shipId, planetId);
         return;
@@ -326,7 +356,7 @@ static void GetComponent(struct TransportShip* sh, const struct Config* c, Uns16
     }
 
     // OK, do it
-    const Uns16 numComponents = MIN(baseComponents, maxComponents);
+    const Uns16 numComponents = MIN(baseComponents - reservedComponents, maxComponents);
     TransportShip_PutCargo(sh, type, slot, TransportShip_Cargo(sh, type, slot) + numComponents);
     PutBaseComponents(planetId, type, slot, baseComponents - numComponents);
     Info("\t(+) Ship %d, base %d: loaded %d %s-%d", shipId, planetId, numComponents, ComponentTypeName(type), slot);
