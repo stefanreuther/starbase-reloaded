@@ -24,6 +24,8 @@
 #include "sendconf.h"
 #include "transport.h"
 
+static const char*const VERSION = "0.42";
+
 static const char*const BANNER = "Starbase Reloaded - A StarbasePlus Variant";
 static const char*const LOG_FILE = "psbplus.log";
 
@@ -37,7 +39,7 @@ enum Mode {
 
 static void PrintUsage(FILE* stream, const char* name)
 {
-    fprintf(stream, "%s\n\n"
+    fprintf(stream, "%s - v%s\n\n"
             "Usage: %s MODE [GAMEDIR [ROOTDIR]]\n\n"
             "MODE is:\n"
             "  1       auxhost1\n"
@@ -46,7 +48,7 @@ static void PrintUsage(FILE* stream, const char* name)
             "  -ds     dump ship storage\n"
             "  --help  this message\n\n"
             "Written in 2020 by Stefan Reuther <streu@gmx.de> for PlanetsCentral\n",
-            BANNER, name);
+            BANNER, VERSION, name);
 }
 
 static int ParseMode(enum Mode* pMode, const char* name)
@@ -115,7 +117,7 @@ static void DoBeforeMovement()
     struct Config c;
     InitHostAction(True, &c);
 
-    Info("Starbase Reloaded - Before Movement...");
+    Info("Starbase Reloaded v%s - Before Movement...", VERSION);
     DoMineSweeping(&c);
     DoMineLaying(&c);
     DoTrimCargo(&c);
@@ -132,7 +134,7 @@ static void DoAfterMovement()
     struct Config c;
     InitHostAction(False, &c);
 
-    Info("Starbase Reloaded - After Movement...");
+    Info("Starbase Reloaded v%s - After Movement...", VERSION);
     DoComponentTransport(&c);
     DoCreditTransfer(&c);
     DoSendConfig(&c);
