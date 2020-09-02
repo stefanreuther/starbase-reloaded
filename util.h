@@ -44,6 +44,12 @@ Boolean ShipHasFCode(Uns16 shipId, const char* expected);
     @return value matching the last character of the code; 0 if no match or limit exceeded */
 int ShipMatchFCode(Uns16 shipId, const char* prefix, int limit);
 
+/** Define a series of special friendly codes.
+    This defines the friendly codes special that ShipMatchFCode(..., prefix, limit) or PlanetMatchFCode(..., prefix, limit) will match.
+    @param [in] prefix   Code prefix (2 characters)
+    @param [in] limit    Limit */
+void DefineSpecialFCodeSeries(const char* prefix, int limit);
+
 /** Check for nonzero value.
     @param [in] array Array to check
     @param [in] count Number of elements in array

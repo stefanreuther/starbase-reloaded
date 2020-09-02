@@ -11,6 +11,8 @@
 
 const int MIN_TOTAL_TECH = 20; /* FIXME: put in config */
 
+const int MAX_FCODE = 5;
+
 struct State {
     Uns16 ReceivingBase[RACE_NR+1];
 };
@@ -58,7 +60,7 @@ static void Credit_ProcessSenders(struct State* p, const struct Config* c)
 {
     int i, amount;
     for (i = 1; i <= PLANET_NR; ++i) {
-        if (IsBaseExist(i) && (amount = PlanetMatchFCode(i, "TM", 5)) != 0) {
+        if (IsBaseExist(i) && (amount = PlanetMatchFCode(i, "TM", MAX_FCODE)) != 0) {
             RaceType_Def owner = BaseOwner(i);
             if (owner > 0 && owner <= RACE_NR) {
                 if (BaseCanTransfer(c, i)) {
@@ -87,6 +89,12 @@ static void Credit_ProcessSenders(struct State* p, const struct Config* c)
     }
 }
 
+static void RegisterCreditFCodes()
+{
+    DefineSpecialFCodeSeries("TM", MAX_FCODE);
+    DefineSpecialFCode("RMT");
+}
+
 void DoCreditTransfer(const struct Config* c)
 {
     if (!c->StarbaseMCTransfer || c->MaxMCTransfer == 0) {
@@ -97,5 +105,6 @@ void DoCreditTransfer(const struct Config* c)
         Credit_Init(&st);
         Credit_FindReceivers(&st, c);
         Credit_ProcessSenders(&st, c);
+        RegisterCreditFCodes();
     }
 }

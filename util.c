@@ -47,6 +47,14 @@ int ShipMatchFCode(Uns16 shipId, const char* prefix, int limit)
     return MatchFCode(fc, prefix, limit);
 }
 
+void DefineSpecialFCodeSeries(const char* prefix, int limit)
+{
+    for (int i = 1; i <= limit; ++i) {
+        char fc[] = { prefix[0], prefix[1], '0' + (i%10), '\0' };
+        DefineSpecialFCode(fc);
+    }
+}
+
 Boolean AnyNonzero(const Uns16* array, size_t count)
 {
     for (size_t i = 0; i < count; ++i) {

@@ -734,6 +734,20 @@ static void HandleNewShips(struct TransportState* st)
     fclose(fp);
 }
 
+static void RegisterTransportFCodes(const struct Config* c)
+{
+    DefineSpecialFCode("UAP");
+    DefineSpecialFCodeSeries("UE", ENGINE_NR);
+    DefineSpecialFCodeSeries("UB", BEAM_NR);
+    DefineSpecialFCodeSeries("UT", TORP_NR);
+
+    if (c->TransportComp) {
+        DefineSpecialFCodeSeries("GE", ENGINE_NR);
+        DefineSpecialFCodeSeries("GB", BEAM_NR);
+        DefineSpecialFCodeSeries("GT", TORP_NR);
+    }
+}
+
 
 /*
  *  Public Entry Points
@@ -828,4 +842,7 @@ void DoComponentTransport(const struct Config* c)
 
     // Save state
     TransportState_Save(&st);
+
+    // Friendly codes
+    RegisterTransportFCodes(c);
 }

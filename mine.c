@@ -143,6 +143,12 @@ void DoMineLaying(const struct Config* c)
                 }
             }
         }
+        if (c->LayMinefields) {
+            DefineSpecialFCode("LMF");
+        }
+        if (c->LayWebMinefields) {
+            DefineSpecialFCode("LWF");
+        }
     } else {
         Info("    Laying minefields disabled.");
     }
@@ -322,6 +328,12 @@ void DoMineSweeping(const struct Config* c)
                     ScoopFromPlanet(c, i);
                 }
             }
+        }
+        if (c->BeamSweepMines || c->FighterSweepMines) {
+            DefineSpecialFCode("SMF");
+        }
+        if (c->ScoopMinefields) {
+            DefineSpecialFCode("MSC");
         }
     } else {
         Info("    Sweeping/scooping minefields disabled.");
