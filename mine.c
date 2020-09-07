@@ -63,11 +63,8 @@ static Uns16 FindMinefieldForLaying(Uns16 planetId, RaceType_Def owner, Boolean 
 static Uns32 UnitsToLay(const struct Config* c, RaceType_Def owner, Boolean isWeb, Uns32 existingUnits, Uns16 torpNr, Uns16 torps)
 {
     // Maximum number that can be added without exceeding the maximum size:
-    Info("owner=%d, isWeb=%d", owner, isWeb);
     const Uns32 permittedUnits = MaxMinefieldUnits(owner, isWeb);
-    Info("permittedUnits=%d", permittedUnits);
     const Uns32 addibleUnits = existingUnits < permittedUnits ? permittedUnits - existingUnits : 0;
-    Info("addibleUnits=%d", addibleUnits);
 
     // Units we add now
     const Uns32 rate = UnitsPerTorpedoRate(c, torpNr, isWeb);
