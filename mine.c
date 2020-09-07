@@ -211,7 +211,7 @@ static void SweepFromPlanet(Uns16 planetId, Uns32 mineCapacity, Uns32 webCapacit
 
             PutMinefieldUnits(mineId, remainingUnits);
 
-            Info("\t(+) Base %d, minefield %d: sweep %d units using %s", planetId, mineId, sweptUnits, withFighters ? "fighters" : "beams");
+            Info("\t(+) Base %d, minefield %d: sweep %ld units using %s", planetId, mineId, (long) sweptUnits, withFighters ? "fighters" : "beams");
             Message_MinefieldSwept(PlanetOwner(planetId), planetId, mineId, oldX, oldY, oldOwner, oldRadius, sweptUnits, remainingUnits, oldWeb, withFighters);
             Util_Minefield(PlanetOwner(planetId), mineId, oldX, oldY, oldOwner, remainingUnits, oldWeb, MINE_SWEPT);
         }

@@ -62,13 +62,13 @@ void Message_Format(struct Message* m, const char* tpl, const Uns32* args, size_
 
              case 'I':
                 // 4-digit Id
-                sprintf(tmp, "%04d", index < numArgs ? args[index] : 0);
+                sprintf(tmp, "%04ld", (long) (index < numArgs ? args[index] : 0));
                 Message_Add(m, tmp);
                 break;
 
              case 'd':
                 // Normal decimal number
-                sprintf(tmp, "%d", index < numArgs ? args[index] : 0);
+                sprintf(tmp, "%ld", (long) (index < numArgs ? args[index] : 0));
                 Message_Add(m, tmp);
                 break;
 

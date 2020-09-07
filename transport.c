@@ -413,7 +413,7 @@ static void UnloadAll(struct TransportShip* sh, Uns16 shipId, Uns16 planetId)
 
     // Generate messages
     // For now, do not distinguish between "nothing aboard" and "no space on base" which both end up with total=0.
-    Info("\t(+) Ship %d, base %d: unloaded %d components", shipId, planetId, total);
+    Info("\t(+) Ship %d, base %d: unloaded %ld components", shipId, planetId, (long) total);
     if (total == 0) {
         Message_Transport_UnloadNoParts(ShipOwner(shipId), shipId);
     } else {
