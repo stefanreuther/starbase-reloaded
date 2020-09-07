@@ -94,7 +94,7 @@ minefields laid by a ship.
 
        Mine_Units = Num_Torps * (Torp_slot ^ 2)
 
-  The Robotic 4x advantage is not active for starbases!
+  The Robotic 4x advantage will be taken into account.
 
   If the maximum minefield radius has been reached, no more torpedoes
   will be laid.
@@ -216,6 +216,13 @@ The following `pconfig.src` options are relevant for Minefields:
 
   This option is used to determine Crystal players for laying web
   mines.
+
+
++ `UnitsPerTorpRate`
+
+  This option determines the rate at which torpedoes are converted
+  into mines and back for each race. In particular, it defines the
+  Robotic "4X mines" bonus.
 
 
 

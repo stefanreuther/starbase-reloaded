@@ -26,7 +26,7 @@ static const Uns16 MAX_BASE_TORPS = 10000;
  *  Mine Laying
  */
 
-static Uns32 UnitsPerTorpedoRate(const struct Config* c, Uns16 torpNr, Boolean isWeb)
+static Uns32 UnitsPerTorpedoRate(const struct Config* c, RaceType_Def owner, Uns16 torpNr, Boolean isWeb)
 {
     (void) c;
     (void) isWeb;
@@ -36,6 +36,11 @@ static Uns32 UnitsPerTorpedoRate(const struct Config* c, Uns16 torpNr, Boolean i
     }
 
     Uns32 rate = torpNr * torpNr;
+
+    if (owner > 0 && owner <= RACE_NR) {
+        rate = rate * gPconfigInfo->UnitsPerTorpRate[owner] / 100;
+    }
+
     return MAX(rate, 1);
 }
 
@@ -67,14 +72,14 @@ static Uns32 UnitsToLay(const struct Config* c, RaceType_Def owner, Boolean isWe
     const Uns32 addibleUnits = existingUnits < permittedUnits ? permittedUnits - existingUnits : 0;
 
     // Units we add now
-    const Uns32 rate = UnitsPerTorpedoRate(c, torpNr, isWeb);
+    const Uns32 rate = UnitsPerTorpedoRate(c, owner, torpNr, isWeb);
     return MIN(torps * rate, addibleUnits);
 }
 
 static void RemoveTorpedoes(const struct Config* c, Uns16 planetId, Uns16 torpNr, Boolean isWeb, Uns32 unitsNow)
 {
     // If a fractional torpedo was laid, remove it entirely.
-    const Uns32 rate = UnitsPerTorpedoRate(c, torpNr, isWeb);
+    const Uns32 rate = UnitsPerTorpedoRate(c, PlanetOwner(planetId), torpNr, isWeb);
     const Uns16 torps = BaseTorps(planetId, torpNr) - (unitsNow + (rate-1)) / rate;
 
     PutBaseTorps(planetId, torpNr, torps);
@@ -275,7 +280,7 @@ static void ScoopFromPlanet(const struct Config* c, Uns16 planetId)
 
             // Determine scooping rate. Scooping rate is same as laying rate.
             const Uns32 torpNr = TorpNrForScooping(planetId);
-            const Uns32 torpRate = UnitsPerTorpedoRate(c, torpNr, IsMinefieldWeb(mineId));
+            const Uns32 torpRate = UnitsPerTorpedoRate(c, PlanetOwner(planetId), torpNr, IsMinefieldWeb(mineId));
 
             // Determine number of torpedoes we get by sweeping the entire field.
             // A fractional torpedo is discarded.
