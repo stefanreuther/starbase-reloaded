@@ -24,7 +24,7 @@
 #include "sendconf.h"
 #include "transport.h"
 
-static const char*const VERSION = "0.42";
+static const char*const VERSION = "0.43";
 
 static const char*const BANNER = "Starbase Reloaded - A StarbasePlus Variant";
 static const char*const LOG_FILE = "psbplus.log";
