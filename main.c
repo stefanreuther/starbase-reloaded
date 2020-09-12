@@ -93,7 +93,7 @@ static void InitHostAction(Boolean beforeMovement, struct Config* c)
     }
     Config_Load(c);
 
-    // Set util.tmp more. This causes our util.dat records come out in the right order.
+    // Set util.tmp mode. This causes our util.dat records come out in the right order.
     // In particular, our mine scans come out before PHost's.
     SetUtilMode(UTIL_Tmp);
 }
