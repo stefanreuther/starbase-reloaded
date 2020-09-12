@@ -29,7 +29,6 @@ static const Uns16 MAX_BASE_TORPS = 10000;
 static Uns32 UnitsPerTorpedoRate(const struct Config* c, RaceType_Def owner, Uns16 torpNr, Boolean isWeb)
 {
     (void) c;
-    (void) isWeb;
 
     if (USE_TORP_TECH) {
         torpNr = TorpTechLevel(torpNr);
@@ -38,7 +37,11 @@ static Uns32 UnitsPerTorpedoRate(const struct Config* c, RaceType_Def owner, Uns
     Uns32 rate = torpNr * torpNr;
 
     if (owner > 0 && owner <= RACE_NR) {
-        rate = rate * gPconfigInfo->UnitsPerTorpRate[owner] / 100;
+        Uns16 playerRate = (isWeb
+                            ? gPconfigInfo->UnitsPerWebRate[owner]
+                            : gPconfigInfo->UnitsPerTorpRate[owner]);
+
+        rate = rate * playerRate / 100;
     }
 
     return MAX(rate, 1);

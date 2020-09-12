@@ -218,7 +218,7 @@ The following `pconfig.src` options are relevant for Minefields:
   mines.
 
 
-+ `UnitsPerTorpRate`
++ `UnitsPerTorpRate`, `UnitsPerWebRate`
 
   This option determines the rate at which torpedoes are converted
   into mines and back for each race. In particular, it defines the
