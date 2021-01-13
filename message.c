@@ -106,7 +106,7 @@ void Message_Send(struct Message* m, RaceType_Def to)
 {
     assert(m->Length < sizeof(m->Content));
     m->Content[m->Length] = '\0';
-    WriteExternalMessage(to, m->Content);
+    WriteAUXHOSTMessage(to, m->Content);
 }
 
 void Message_SendTemplate(RaceType_Def to, const char* tpl, const Uns32* args, size_t numArgs)
