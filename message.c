@@ -171,8 +171,8 @@ void Message_MinefieldLaid(RaceType_Def owner, Uns16 planetId, Uns16 mineId, Uns
 
     const char* prefix = "(-l%1I)<<< Space Dock Message >>>\n"
         "\n"
-        "FROM: %1P\n"
-        "  Starbase %1d\n"
+        "FROM: %0P\n"
+        "  Starbase %0d\n"
         "\n";
 
     const char* action;
