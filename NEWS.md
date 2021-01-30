@@ -1,3 +1,13 @@
+v0.44 (30/Jan/2021)
+-------------------
+
+Messages now appear in the correct order with respect to
+host-generated messages. In particular, mine laying from starbases
+appears before mine sweeping from ships that happened later, so
+programs that parse messages see the correct final size. In addition,
+fix a wrong message template.
+
+
 v0.43 (12/Sep/2020)
 -------------------
 

@@ -24,7 +24,7 @@
 #include "sendconf.h"
 #include "transport.h"
 
-static const char*const VERSION = "0.43";
+static const char*const VERSION = "0.44";
 
 static const char*const BANNER = "Starbase Reloaded - A StarbasePlus Variant";
 static const char*const LOG_FILE = "psbplus.log";
@@ -47,7 +47,7 @@ static void PrintUsage(FILE* stream, const char* name)
             "  -dc     dump config\n"
             "  -ds     dump ship storage\n"
             "  --help  this message\n\n"
-            "Written in 2020 by Stefan Reuther <streu@gmx.de> for PlanetsCentral\n",
+            "Written in 2020,2021 by Stefan Reuther <streu@gmx.de> for PlanetsCentral\n",
             BANNER, VERSION, name);
 }
 

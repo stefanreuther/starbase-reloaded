@@ -46,8 +46,11 @@ ignored.
 
   `n` is a digit between 1 and 5. The starbase will send up to
   `n`*1000 mc to the receiving starbase. The upper limit can be
-  configured. If the planet doesn't have enough cash, fewer will be
-  sent. If nobody is receiving, nothing will happen.
+  configured. If the planet doesn't have enough cash, it will send
+  everything it has. If nobody is receiving, nothing will happen.
+
+  Because money transfers happen at the end of the turn, you can send
+  money produced by taxation this turn.
 
 
 
@@ -61,7 +64,7 @@ The following `psbplus.src` options are relevant for Wire Transfer:
 
 * `MaxMCTransfer` (number, default: 3000)
 
-  Maxiumm amount of cash a single `TMn` can send.
+  Maximum amount of cash a single `TMn` can send.
 
 
 
@@ -98,6 +101,12 @@ minefields laid by a ship.
 
   If the maximum minefield radius has been reached, no more torpedoes
   will be laid.
+
+  Mine laying by starbases happens before ships' mine sweep and mine
+  scoop missions, so you can use a ship to scoop up a minefield laid
+  by a base in one turn.
+
+  Be aware that mine decay also happens after starbases lay mines.
 
 
 + `LWF` (lay web field; planet friendly code)
