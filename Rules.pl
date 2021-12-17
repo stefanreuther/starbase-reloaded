@@ -27,6 +27,8 @@ my @SOURCE = qw(
    config.h
    credits.c
    credits.h
+   language.c
+   language.h
    message.c
    message.h
    mine.c

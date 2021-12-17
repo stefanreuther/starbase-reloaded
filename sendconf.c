@@ -5,6 +5,7 @@
 
 #include "sendconf.h"
 #include "config.h"
+#include "language.h"
 #include "message.h"
 #include "util.h"
 
@@ -17,12 +18,11 @@ static void State_SendOption(void* state, const char* name, const char* value)
 {
     struct State* st = state;
     if (st->m.Lines >= MAX_MESSAGE_LINES) {
-        Message_Add(&st->m, "(continued on next page)\n");
+        const struct Language* lang = GetLanguageForPlayer(st->player);
+        Message_Add(&st->m, lang->Continuation);
         Message_Send(&st->m, st->player);
         Message_Init(&st->m);
-        Message_Add(&st->m,
-                    "(-h0000)<<< Starbase Plus Reloaded >>>\n\n"
-                    "Configuration (continued):\n");
+        Message_Add(&st->m, lang->SendConfig_Continuation);
     }
     Message_Add(&st->m, "  ");
     Message_Add(&st->m, name);
@@ -34,11 +34,10 @@ static void State_SendOption(void* state, const char* name, const char* value)
 static void SendConfig(const struct Config* c, RaceType_Def player)
 {
     struct State st;
+    const struct Language* lang = GetLanguageForPlayer(player);
     st.player = player;
     Message_Init(&st.m);
-    Message_Add(&st.m,
-                "(-h0000)<<< Starbase Plus Reloaded >>>\n\n"
-                "Configuration:\n");
+    Message_Add(&st.m, lang->SendConfig_Header);
     Config_Format(c, State_SendOption, &st);
     Message_Send(&st.m, st.player);
 }

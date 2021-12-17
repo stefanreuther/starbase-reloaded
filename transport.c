@@ -10,6 +10,7 @@
 #include "util.h"
 #include "message.h"
 #include "utildata.h"
+#include "language.h"
 
 /*
  *  Definitions
@@ -463,13 +464,12 @@ static void ReportShip_Add(struct ReportShip_State* st, const struct TransportSh
     if (amount != 0) {
         const Uns16 shipId = st->args[0];
         if (st->m.Lines >= MAX_MESSAGE_LINES) {
-            Message_Add(&st->m, "(continued on next page)\n");
+            const struct Language* lang = GetLanguageForPlayer(ShipOwner(shipId));
+            Message_Add(&st->m, lang->Continuation);
             Message_Send(&st->m, ShipOwner(shipId));
             Message_Init(&st->m);
             Message_Format(&st->m,
-                           "(-f%0I)<<< Special Transport >>>\n"
-                           "\n"
-                           "(continued inventory)\n",
+                           lang->ReportShip_Continuation,
                            st->args, 2);
         }
 
@@ -484,21 +484,14 @@ static void ReportShip(struct TransportShip* sh, const struct Config* c, Uns16 s
 {
     char name[40];
 
+    const struct Language* lang = GetLanguageForPlayer(ShipOwner(shipId));
     const Uns16 totalCargo = TransportShip_CargoMass(sh, c);
     struct ReportShip_State st;
     st.args[0] = shipId;
     st.args[1] = totalCargo;
     st.config = c;
     Message_Init(&st.m);
-    Message_Format(&st.m,
-                   "(-f%0I)<<< Special Transport >>>\n"
-                   "\n"
-                   "FROM: %0S\n"
-                   "  Ship %0d\n"
-                   "\n"
-                   "We are currently carrying components\n"
-                   "with a total weight of %1d kt:\n",
-                   st.args, 2);
+    Message_Format(&st.m, lang->ReportShip_Header, st.args, 2);
     Util_Transport_Summary(ShipOwner(shipId), shipId, totalCargo);
 
     for (Uns16 i = 1; i <= ENGINE_NR; ++i) {
